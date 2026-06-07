@@ -2,7 +2,7 @@
 <html lang="es">
 <head>
 <meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
 <meta name="theme-color" content="#1b1410" />
 <title>VU·SONO — Medidor de decibeles retro</title>
 <style>
@@ -48,13 +48,16 @@
       radial-gradient(120% 90% at 50% -10%, #4a3826 0%, #2c2014 45%, #160f08 100%);
     color:var(--ivory);
     display:flex; align-items:center; justify-content:center;
-    min-height:100%; padding:18px;
+    min-height:100%;
+    padding:clamp(10px,3vw,28px);
+    padding-bottom:max(clamp(10px,3vw,28px), env(safe-area-inset-bottom));
+    padding-top:max(clamp(10px,3vw,28px), env(safe-area-inset-top));
     overflow-x:hidden;
   }
 
   /* ======================= GABINETE ======================= */
   .cabinet{
-    width:min(440px,96vw);
+    width:min(96vw,460px);
     background:
       linear-gradient(180deg,#3a2a18 0%, #281c10 100%);
     border-radius:26px;
@@ -130,15 +133,16 @@
   .lcd::after{ content:""; position:absolute; inset:0;
     background:repeating-linear-gradient(0deg, rgba(0,0,0,.18) 0 2px, transparent 2px 4px); pointer-events:none;}
   .lcd .big{
-    font-family:"Courier New",monospace; font-weight:700; font-size:46px; line-height:1;
+    font-family:"Courier New",monospace; font-weight:700;
+    font-size:clamp(32px,10vw,52px); line-height:1;
     color:var(--lcd);
     text-shadow:0 0 6px var(--lcd-glow), 0 0 18px var(--lcd-glow);
     letter-spacing:1px;
   }
-  .lcd .big .u{ font-size:16px; margin-left:6px; opacity:.85; letter-spacing:1px;}
+  .lcd .big .u{ font-size:.36em; margin-left:6px; opacity:.85; letter-spacing:1px;}
   .lcd .sub{ font-size:9px; letter-spacing:.2em; color:#5e8a6a; margin-top:5px; text-transform:uppercase;}
   .stats{
-    width:108px; display:flex; flex-direction:column; gap:6px;
+    width:clamp(92px,26%,120px); display:flex; flex-direction:column; gap:6px;
   }
   .stat{
     background:#0c1410; border-radius:8px; padding:6px 9px; border:1px solid #000;
@@ -254,6 +258,38 @@
 
   .hint-msg{ text-align:center; font-size:10.5px; color:#9a7c4a; margin-top:12px; min-height:14px; letter-spacing:.04em;}
   a.foot{ color:#9a7c4a;}
+
+  /* ======================= RESPONSIVE POR DISPOSITIVO ======================= */
+  /* Móvil estrecho (iPhone SE, Androids pequeños): que nada se desborde */
+  @media (max-width:360px){
+    .cabinet{ padding:14px; border-radius:20px; }
+    .stat b{ font-size:14px; }
+    .btn{ padding:12px 6px; font-size:11px; letter-spacing:.06em; }
+  }
+  /* Tablet (iPad vertical y similares): gabinete más grande */
+  @media (min-width:760px){
+    .cabinet{ width:540px; padding:22px; }
+    .lcd .big{ font-size:56px; }
+    .ladder{ height:20px; }
+    .scope{ height:120px; }
+    .btn{ padding:15px 10px; font-size:13.5px; }
+  }
+  /* Escritorio y tablets grandes en horizontal */
+  @media (min-width:1100px){
+    .cabinet{ width:600px; padding:26px; border-radius:30px; }
+    .lcd .big{ font-size:62px; }
+    .scope{ height:140px; }
+  }
+  /* Pantallas bajas en horizontal (móvil apaisado): compactar verticalmente */
+  @media (max-height:560px) and (orientation:landscape){
+    body{ align-items:flex-start; }
+    .scope{ height:70px; }
+    .brand{ margin-bottom:8px; }
+  }
+  /* Respeta quien prefiere menos animación */
+  @media (prefers-reduced-motion:reduce){
+    .dose-bar i{ transition:none; }
+  }
 </style>
 </head>
 <body>
