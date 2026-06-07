@@ -26,26 +26,108 @@
     --needle-dark:#1c140a; --needle-red:#c0392b;
     --lcd:#ffc15e; --lcd-glow:rgba(255,170,70,.55);
   }
-  html[data-theme="noir"]{
-    --face-hi:#3c3c42; --face:#242428; --face-lo:#141417;
-    --tick:#e8a13a; --tick-red:#ff7043;
-    --units:#b88a3a; --wlabel:#c8923a;
-    --needle-dark:#f0e0c0; --needle-red:#ff5a3c;
-    --lcd:#ffc15e; --lcd-glow:rgba(255,170,70,.55);
+  /* ===== NEÓN — synthwave: negro + magenta/cian con glow ===== */
+  html[data-theme="neon"]{
+    --page-bg:radial-gradient(120% 90% at 50% -10%, #2a0b3f 0%, #140a2e 45%, #05030f 100%);
+    --cab-bg:linear-gradient(180deg,#1a1030 0%, #0c0820 100%);
+    --cab-border:1px solid #ff2fb0; --cab-radius:20px; --wood-op:0; --screw-disp:none;
+    --cab-shadow:0 0 0 1px rgba(255,47,176,.4) inset, 0 0 34px rgba(255,47,176,.35), 0 22px 50px rgba(0,0,0,.7);
+    --brand:#21f0ff; --brand-sub:#ff2fb0; --brand-shadow:0 0 8px rgba(33,240,255,.9); --brand-spacing:.5em;
+    --face-hi:#1d1140; --face:#150c30; --face-lo:#0a0620;
+    --face-border:1px solid #ff2fb0; --face-radius:16px; --glass-op:.25;
+    --face-shadow:0 0 0 2px rgba(255,47,176,.5), 0 0 26px rgba(33,240,255,.25) inset;
+    --tick:#21f0ff; --tick-red:#ff2fb0;
+    --units:#b06cff; --wlabel:#ff2fb0;
+    --needle-dark:#21f0ff; --needle-red:#ff2fb0;
+    --lcd:#ff7ae0; --lcd-glow:rgba(255,47,176,.8);
+    --brass:#ff2fb0; --brass-light:#ff8ad8;
+    --btn-bg:linear-gradient(180deg,#ff5ec8,#d10f86); --btn-color:#16001f;
+    --btn-shadow:0 0 14px rgba(255,47,176,.6), 0 2px 0 #8a0a5a; --btn-shadow-active:0 0 8px rgba(255,47,176,.5) inset;
   }
-  html[data-theme="nocturne"]{
-    --face-hi:#2c3e66; --face:#1a2742; --face-lo:#0f1a30;
-    --tick:#a8c8ff; --tick-red:#ff9a7a;
-    --units:#6f9ad6; --wlabel:#7fa8d8;
-    --needle-dark:#dfeaff; --needle-red:#ff7a5a;
-    --lcd:#7fd4ff; --lcd-glow:rgba(90,180,255,.55);
+  /* ===== CASETE — plástico noventero, colores vivos, chunky ===== */
+  html[data-theme="casete"]{
+    --page-bg:linear-gradient(180deg,#0f8a8a 0%, #0a5c6e 100%);
+    --cab-bg:linear-gradient(180deg,#ff8a3d 0%, #f2662a 100%);
+    --cab-border:2px solid #c84a14; --cab-radius:14px; --wood-op:0;
+    --cab-shadow:0 4px 0 #b8410f, 0 16px 30px rgba(0,0,0,.4), 0 2px 0 rgba(255,255,255,.4) inset;
+    --brand:#2a1206; --brand-sub:#7a3410; --brand-shadow:0 1px 0 rgba(255,255,255,.4); --brand-spacing:.3em;
+    --face-hi:#cfe8b0; --face:#aed47f; --face-lo:#8fbf63;
+    --face-border:3px solid #2a1206; --face-radius:8px; --glass-op:.4;
+    --face-shadow:0 0 0 4px #ffd23d, 0 0 0 7px #2a1206, 0 4px 8px rgba(0,0,0,.4) inset;
+    --tick:#1f3a10; --tick-red:#b5301f;
+    --units:#3a5a20; --wlabel:#3a5a20;
+    --needle-dark:#1f3a10; --needle-red:#d11f1f;
+    --lcd:#9be84a; --lcd-glow:rgba(120,220,60,.6);
+    --brass:#ffd23d; --brass-light:#ffe27a;
+    --btn-bg:linear-gradient(180deg,#ffe27a,#ffc31f); --btn-color:#2a1206;
+    --btn-shadow:0 4px 0 #c89000, 0 6px 10px rgba(0,0,0,.3); --btn-radius:8px;
   }
+  /* ===== CROMO — Aqua/Web 2.0: cristal, plata, azul brillante ===== */
+  html[data-theme="cromo"]{
+    --page-bg:linear-gradient(180deg,#dfe9f2 0%, #b9c9da 100%);
+    --cab-bg:linear-gradient(180deg,#fbfdff 0%, #d4dde7 48%, #aebccb 100%);
+    --cab-border:1px solid #8fa3b8; --cab-radius:24px; --wood-op:0; --screw-disp:none;
+    --cab-shadow:0 1px 0 rgba(255,255,255,.9) inset, 0 -10px 24px rgba(120,150,180,.4) inset, 0 20px 40px rgba(80,110,140,.4);
+    --brand:#2a4d6e; --brand-sub:#6f8aa6; --brand-shadow:0 1px 0 rgba(255,255,255,.8); --brand-spacing:.4em;
+    --face-hi:#ffffff; --face:#eaf2fb; --face-lo:#cfe0f0;
+    --face-border:1px solid #9fb6cc; --face-radius:18px; --glass-op:1;
+    --face-shadow:0 0 0 4px #f4f8fc, 0 0 0 6px #aebccb, 0 6px 14px rgba(80,110,140,.35) inset;
+    --tick:#234a6e; --tick-red:#c0392b;
+    --units:#5a7894; --wlabel:#5a7894;
+    --needle-dark:#16324a; --needle-red:#e23b2e;
+    --lcd:#39c6ff; --lcd-glow:rgba(40,170,255,.7);
+    --brass:#3a8fd6; --brass-light:#7fc2f0;
+    --btn-bg:linear-gradient(180deg,#ffffff 0%, #cfe2f4 50%, #9fc4e8 51%, #c2dcf2 100%); --btn-color:#1c3a50;
+    --btn-shadow:0 1px 0 rgba(255,255,255,.9) inset, 0 2px 5px rgba(70,110,150,.5); --btn-radius:20px; --btn-border:1px solid #8fb0cf;
+  }
+  /* ===== PLANO — flat/material 2010s: colores sólidos, sin relieve ===== */
+  html[data-theme="plano"]{
+    --page-bg:#eceff1;
+    --cab-bg:#ffffff;
+    --cab-border:none; --cab-radius:16px; --wood-op:0; --screw-disp:none;
+    --cab-shadow:0 6px 18px rgba(0,0,0,.12);
+    --brand:#37474f; --brand-sub:#90a4ae; --brand-shadow:none; --brand-spacing:.32em;
+    --face-hi:#ffffff; --face:#f5f7f8; --face-lo:#eceff1;
+    --face-border:none; --face-radius:12px; --glass-op:0;
+    --face-shadow:0 0 0 2px #e0e4e7;
+    --tick:#455a64; --tick-red:#e53935;
+    --units:#90a4ae; --wlabel:#90a4ae;
+    --needle-dark:#263238; --needle-red:#e53935;
+    --lcd:#26c6da; --lcd-glow:rgba(38,198,218,.35);
+    --brass:#26a69a; --brass-light:#4db6ac;
+    --btn-bg:#26a69a; --btn-color:#fff; --btn-shadow:none; --btn-shadow-active:0 0 0 3px rgba(38,166,154,.3) inset; --btn-radius:8px;
+  }
+  /* ===== MÍNIMO — 2020s minimalista: limpio, mucho aire, monocromo suave ===== */
+  html[data-theme="minimo"]{
+    --page-bg:#f4f4f2; --ivory:#1a1a1a;
+    --page-font:"Helvetica Neue",-apple-system,system-ui,Arial,sans-serif;
+    --cab-bg:#fbfbf9;
+    --cab-border:1px solid #e6e6e2; --cab-radius:28px; --wood-op:0; --screw-disp:none;
+    --cab-shadow:0 10px 40px rgba(0,0,0,.06);
+    --brand:#1a1a1a; --brand-sub:#b8b8b4; --brand-shadow:none; --brand-spacing:.5em;
+    --face-hi:#ffffff; --face:#fafafa; --face-lo:#f2f2f0;
+    --face-border:none; --face-radius:18px; --glass-op:0;
+    --face-shadow:none;
+    --tick:#2a2a2a; --tick-red:#e05a4a;
+    --units:#c2c2bd; --wlabel:#c2c2bd;
+    --needle-dark:#1a1a1a; --needle-red:#e05a4a;
+    --lcd:#1a1a1a; --lcd-glow:rgba(0,0,0,0);
+    --brass:#1a1a1a; --brass-light:#3a3a3a;
+    --lcd:#f4f4f2; --lcd-glow:rgba(0,0,0,0);
+    --btn-bg:transparent; --btn-color:#1a1a1a; --btn-border:1.5px solid #1a1a1a;
+    --btn-shadow:none; --btn-shadow-active:0 0 0 2px rgba(0,0,0,.08) inset; --btn-radius:24px; --btn-transform:none;
+  }
+  /* correcciones de contraste para temas claros */
+  html[data-theme="cromo"]{ --ivory:#2a4d6e; }
+  html[data-theme="plano"]{ --ivory:#37474f; }
+  html[data-theme="minimo"] .chiptheme.sel,
+  html[data-theme="minimo"] .toggle button.sel{ color:#fff; }
   *{ box-sizing:border-box; -webkit-tap-highlight-color:transparent; }
   html,body{ height:100%; margin:0; }
   body{
-    font-family:"Helvetica Neue",Arial,sans-serif;
-    background:
-      radial-gradient(120% 90% at 50% -10%, #4a3826 0%, #2c2014 45%, #160f08 100%);
+    font-family:var(--page-font,"Helvetica Neue",Arial,sans-serif);
+    background:var(--page-bg,
+      radial-gradient(120% 90% at 50% -10%, #4a3826 0%, #2c2014 45%, #160f08 100%));
     color:var(--ivory);
     display:flex; align-items:center; justify-content:center;
     min-height:100%;
@@ -58,25 +140,24 @@
   /* ======================= GABINETE ======================= */
   .cabinet{
     width:min(96vw,460px);
-    background:
-      linear-gradient(180deg,#3a2a18 0%, #281c10 100%);
-    border-radius:26px;
+    background:var(--cab-bg, linear-gradient(180deg,#3a2a18 0%, #281c10 100%));
+    border-radius:var(--cab-radius,26px);
     padding:18px;
-    box-shadow:
+    box-shadow:var(--cab-shadow,
       0 2px 1px rgba(255,220,150,.18) inset,
       0 -3px 8px rgba(0,0,0,.6) inset,
       0 30px 60px rgba(0,0,0,.6),
-      0 8px 18px rgba(0,0,0,.45);
+      0 8px 18px rgba(0,0,0,.45));
     position:relative;
-    border:1px solid #1a1208;
+    border:var(--cab-border,1px solid #1a1208);
   }
   /* veta de madera sutil */
   .cabinet::before{
-    content:""; position:absolute; inset:0; border-radius:26px; pointer-events:none;
+    content:""; position:absolute; inset:0; border-radius:var(--cab-radius,26px); pointer-events:none;
     background:repeating-linear-gradient(96deg, rgba(0,0,0,.05) 0 3px, rgba(255,255,255,.012) 3px 7px);
-    mix-blend-mode:overlay; opacity:.5;
+    mix-blend-mode:overlay; opacity:var(--wood-op,.5);
   }
-  .screw{ width:13px;height:13px;border-radius:50%;
+  .screw{ display:var(--screw-disp,block); width:13px;height:13px;border-radius:50%;
     background:radial-gradient(circle at 35% 30%, #d9c089, #7a5a26 60%, #3a2a12);
     box-shadow:0 1px 1px rgba(255,255,255,.25) inset, 0 1px 2px rgba(0,0,0,.6);
     position:absolute; }
@@ -86,27 +167,27 @@
   .screw.bl{ bottom:9px; left:9px;} .screw.br{ bottom:9px; right:9px;}
 
   .brand{
-    text-align:center; letter-spacing:.42em; font-size:12px; font-weight:700;
-    color:var(--brass-light); text-shadow:0 1px 0 #000; margin:2px 0 12px;
+    text-align:center; letter-spacing:var(--brand-spacing,.42em); font-size:12px; font-weight:700;
+    color:var(--brand,var(--brass-light)); text-shadow:var(--brand-shadow,0 1px 0 #000); margin:2px 0 12px;
     padding-left:.42em;
   }
-  .brand small{ display:block; letter-spacing:.2em; font-size:8.5px; color:#9a7c4a; font-weight:600; margin-top:3px;}
+  .brand small{ display:block; letter-spacing:.2em; font-size:8.5px; color:var(--brand-sub,#9a7c4a); font-weight:600; margin-top:3px;}
 
   /* ======================= CARÁTULA DEL VU ======================= */
   .meter-face{
-    position:relative; border-radius:14px; overflow:hidden;
+    position:relative; border-radius:var(--face-radius,14px); overflow:hidden;
     background:
       radial-gradient(120% 130% at 50% 8%, var(--face-hi) 0%, var(--face) 42%, var(--face-lo) 100%);
-    border:2px solid #0c0905;
-    box-shadow:0 0 0 5px #241a0e, 0 8px 18px rgba(0,0,0,.5) inset, 0 2px 4px rgba(0,0,0,.6);
+    border:var(--face-border,2px solid #0c0905);
+    box-shadow:var(--face-shadow, 0 0 0 5px #241a0e, 0 8px 18px rgba(0,0,0,.5) inset, 0 2px 4px rgba(0,0,0,.6));
     padding:6px 6px 0;
   }
   .meter-face svg{ display:block; width:100%; height:auto; }
   /* reflejo de vidrio */
   .glass{
-    position:absolute; inset:0; pointer-events:none; border-radius:14px;
+    position:absolute; inset:0; pointer-events:none; border-radius:var(--face-radius,14px);
     background:linear-gradient(125deg, rgba(255,255,255,.34) 0%, rgba(255,255,255,.05) 22%, transparent 42%);
-    mix-blend-mode:screen;
+    mix-blend-mode:screen; opacity:var(--glass-op,1);
   }
   .units{ position:absolute; left:50%; transform:translateX(-50%); bottom:30px;
     font-size:10px; letter-spacing:.34em; color:var(--units); font-weight:700; padding-left:.34em;}
@@ -188,27 +269,33 @@
   /* ======================= CONTROLES ======================= */
   .controls{ margin-top:16px; display:flex; gap:10px; align-items:center;}
   .btn{
-    flex:1; cursor:pointer; border:none; border-radius:11px; padding:13px 10px;
-    font-weight:700; letter-spacing:.12em; font-size:12.5px; text-transform:uppercase;
-    color:#2a1d10;
-    background:linear-gradient(180deg, var(--brass-light), var(--brass) 80%);
-    box-shadow:0 2px 0 #6e511f, 0 5px 10px rgba(0,0,0,.4), 0 1px 0 rgba(255,255,255,.4) inset;
-    transition:transform .06s, box-shadow .06s; user-select:none;
+    flex:1; cursor:pointer; border:var(--btn-border,none); border-radius:var(--btn-radius,11px); padding:13px 10px;
+    font-weight:700; letter-spacing:.12em; font-size:12.5px; text-transform:var(--btn-transform,uppercase);
+    color:var(--btn-color,#2a1d10);
+    background:var(--btn-bg, linear-gradient(180deg, var(--brass-light), var(--brass) 80%));
+    box-shadow:var(--btn-shadow, 0 2px 0 #6e511f, 0 5px 10px rgba(0,0,0,.4), 0 1px 0 rgba(255,255,255,.4) inset);
+    transition:transform .06s, box-shadow .06s, filter .1s; user-select:none;
   }
-  .btn:active{ transform:translateY(2px); box-shadow:0 0 0 #6e511f, 0 2px 5px rgba(0,0,0,.4) inset;}
+  .btn:active{ transform:translateY(2px); box-shadow:var(--btn-shadow-active, 0 0 0 #6e511f, 0 2px 5px rgba(0,0,0,.4) inset);}
   .btn.power{ flex:1.3; }
   .btn.power.live{ background:linear-gradient(180deg,#e88a5a,#c0392b 85%); box-shadow:0 2px 0 #7d1f15, 0 5px 12px rgba(192,57,43,.5), 0 1px 0 rgba(255,255,255,.3) inset; color:#fff;}
   .btn.ghost{ background:linear-gradient(180deg,#403122,#2c2014); color:var(--brass-light); box-shadow:0 2px 0 #160f08, 0 4px 8px rgba(0,0,0,.4), 0 1px 0 rgba(255,255,255,.08) inset; flex:.85;}
 
   /* fila inferior: ponderación + LED de encendido */
   .strip{ margin-top:12px; display:flex; align-items:center; gap:10px; justify-content:space-between; flex-wrap:wrap;}
-  .themes{ display:flex; gap:7px; }
-  .sw{ width:24px; height:24px; border-radius:50%; cursor:pointer; padding:0;
-    border:2px solid #160f08;
+  /* selector de estéticas: fila de chips con nombre, scroll horizontal en móvil */
+  .themebar{ margin-top:12px; display:flex; gap:7px; overflow-x:auto; padding-bottom:3px;
+    scrollbar-width:none; -webkit-overflow-scrolling:touch; }
+  .themebar::-webkit-scrollbar{ display:none; }
+  .chiptheme{ flex:0 0 auto; cursor:pointer; display:inline-flex; align-items:center; gap:6px;
+    border:1px solid var(--brass); border-radius:999px; padding:6px 11px 6px 7px;
+    background:rgba(0,0,0,.18); color:var(--brand,var(--brass-light)); font-size:11px; font-weight:700;
+    letter-spacing:.04em; white-space:nowrap; transition:transform .08s, background .12s; }
+  .chiptheme i{ width:16px; height:16px; border-radius:50%; flex:0 0 auto; border:1px solid rgba(0,0,0,.35);
     background:linear-gradient(135deg, var(--s1) 0 50%, var(--s2) 50% 100%);
-    box-shadow:0 1px 3px rgba(0,0,0,.5), 0 1px 0 rgba(255,255,255,.15) inset; transition:transform .08s;}
-  .sw:active{ transform:scale(.92); }
-  .sw.sel{ outline:2px solid var(--brass-light); outline-offset:2px; }
+    box-shadow:0 1px 0 rgba(255,255,255,.2) inset; }
+  .chiptheme:active{ transform:scale(.95); }
+  .chiptheme.sel{ background:var(--brass); color:var(--btn-color,#241a0e); border-color:var(--brass-light); }
   .toggle{ display:flex; background:#1b1410; border-radius:9px; padding:3px; gap:2px; border:1px solid #000;
     box-shadow:0 2px 4px rgba(0,0,0,.5) inset;}
   .toggle button{ border:none; background:transparent; color:#8a6f44; font-weight:700; font-size:11px;
@@ -370,12 +457,17 @@
         <button data-w="A" class="sel">A</button>
         <button data-w="Z">Z</button>
       </div>
-      <div class="themes" id="themes" title="Tema de la carátula">
-        <button data-theme="classic" class="sw sel" style="--s1:#f3e7c8;--s2:#b8893b" aria-label="Marfil clásico"></button>
-        <button data-theme="noir" class="sw" style="--s1:#242428;--s2:#e8a13a" aria-label="Negra ámbar"></button>
-        <button data-theme="nocturne" class="sw" style="--s1:#1a2742;--s2:#7fd4ff" aria-label="Azul nocturno"></button>
-      </div>
       <div class="powerled" id="powerled"><span class="dot"></span>POWER</div>
+    </div>
+
+    <!-- ===== SELECTOR DE TEMAS (estéticas por época) ===== -->
+    <div class="themebar" id="themes" title="Estética del medidor">
+      <button data-theme="classic" class="chiptheme sel" style="--s1:#f3e7c8;--s2:#b8893b"><i></i>Analógico</button>
+      <button data-theme="neon" class="chiptheme" style="--s1:#21f0ff;--s2:#ff2fb0"><i></i>Neón</button>
+      <button data-theme="casete" class="chiptheme" style="--s1:#ff8a3d;--s2:#9be84a"><i></i>Casete</button>
+      <button data-theme="cromo" class="chiptheme" style="--s1:#eaf2fb;--s2:#3a8fd6"><i></i>Cromo</button>
+      <button data-theme="plano" class="chiptheme" style="--s1:#ffffff;--s2:#26a69a"><i></i>Plano</button>
+      <button data-theme="minimo" class="chiptheme" style="--s1:#fbfbf9;--s2:#1a1a1a"><i></i>Mínimo</button>
     </div>
 
     <div class="hint-msg" id="hint">Calibra con un sonómetro de referencia para mayor precisión.</div>
@@ -782,13 +874,17 @@
     if(running){ elDesc.textContent='estadísticas reiniciadas'; }
   });
 
-  // ===== selector de temas de carátula =====
+  // ===== selector de estéticas =====
+  const THEME_NAMES=['classic','neon','casete','cromo','plano','minimo'];
   function applyTheme(name){
+    if(!THEME_NAMES.includes(name)) name='classic';
     document.documentElement.dataset.theme = name==='classic'?'':name;
-    document.querySelectorAll('#themes .sw').forEach(s=>s.classList.toggle('sel', s.dataset.theme===name));
+    document.querySelectorAll('#themes .chiptheme').forEach(s=>s.classList.toggle('sel', s.dataset.theme===name));
+    const sel=document.querySelector('#themes .chiptheme.sel');
+    if(sel) sel.scrollIntoView({block:'nearest', inline:'nearest'});
     localStorage.setItem('vusono.theme', name);
   }
-  document.querySelectorAll('#themes .sw').forEach(s=>{
+  document.querySelectorAll('#themes .chiptheme').forEach(s=>{
     s.addEventListener('click', ()=>applyTheme(s.dataset.theme));
   });
   applyTheme(localStorage.getItem('vusono.theme') || 'classic');
