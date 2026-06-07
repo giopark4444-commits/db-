@@ -3,8 +3,15 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
-<meta name="theme-color" content="#1b1410" />
+<meta name="theme-color" content="#1b1410" id="themeColorMeta" />
 <title>VU·SONO — Medidor de decibeles retro</title>
+<link rel="manifest" href="manifest.webmanifest" />
+<link rel="apple-touch-icon" href="icon-180.png" />
+<link rel="icon" type="image/png" href="icon-192.png" />
+<meta name="apple-mobile-web-app-capable" content="yes" />
+<meta name="mobile-web-app-capable" content="yes" />
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+<meta name="apple-mobile-web-app-title" content="VU·SONO" />
 <style>
   :root{
     --ivory:#f3e7c8;
@@ -876,9 +883,12 @@
 
   // ===== selector de estéticas =====
   const THEME_NAMES=['classic','neon','casete','cromo','plano','minimo'];
+  const THEME_BAR={classic:'#1b1410',neon:'#0c0820',casete:'#f2662a',cromo:'#aebccb',plano:'#ffffff',minimo:'#fbfbf9'};
+  const themeColorMeta=document.getElementById('themeColorMeta');
   function applyTheme(name){
     if(!THEME_NAMES.includes(name)) name='classic';
     document.documentElement.dataset.theme = name==='classic'?'':name;
+    if(themeColorMeta) themeColorMeta.setAttribute('content', THEME_BAR[name]||'#1b1410');
     document.querySelectorAll('#themes .chiptheme').forEach(s=>s.classList.toggle('sel', s.dataset.theme===name));
     const sel=document.querySelector('#themes .chiptheme.sel');
     if(sel) sel.scrollIntoView({block:'nearest', inline:'nearest'});
@@ -974,6 +984,14 @@
     if(e.key==='Escape') overlay.classList.remove('show');
   });
 })();
+</script>
+<script>
+  // Registro del service worker (PWA / offline). Silencioso si falla.
+  if('serviceWorker' in navigator){
+    window.addEventListener('load', ()=>{
+      navigator.serviceWorker.register('sw.js').catch(()=>{});
+    });
+  }
 </script>
 </body>
 </html>

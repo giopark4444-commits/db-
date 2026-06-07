@@ -27,6 +27,9 @@ Abre `index.html` en un navegador (Chrome, Safari, Firefox) y pulsa
   de los últimos 30 segundos.
 - **Dosímetro de exposición** (criterio NIOSH): acumula la dosis de ruido y el
   tiempo por encima de 85 dB, y avisa al alcanzar el límite diario seguro.
+- **PWA instalable**: se puede añadir a la pantalla de inicio (iPhone/Android)
+  y abrir a pantalla completa como una app; funciona **offline** gracias a un
+  service worker que cachea la app.
 - **Estéticas intercambiables** que evocan distintos saltos de diseño, no solo
   retro: **Analógico** (VU clásico de madera y latón), **Neón** (synthwave
   oscuro con glow), **Casete** (plástico ochentero/noventero), **Cromo**
@@ -46,6 +49,16 @@ Un micrófono de consumo no está calibrado de fábrica, así que la lectura es
 **aproximada**. Para resultados fiables, calíbralo contra un sonómetro real (o
 una app de referencia) en el mismo lugar. Valores de referencia típicos:
 biblioteca ~30 dB, conversación ~60 dB, tráfico intenso ~85 dB.
+
+## Instalar como app (PWA)
+
+- **iPhone (Safari):** abre la URL `https://…` → botón **Compartir** → **Añadir a
+  pantalla de inicio**.
+- **Android (Chrome):** menú **⋮** → **Instalar app** / **Añadir a pantalla de
+  inicio**.
+- **Escritorio (Chrome/Edge):** icono de instalar en la barra de direcciones.
+
+Una vez instalada se abre a pantalla completa y funciona sin conexión.
 
 ## Atajos
 
