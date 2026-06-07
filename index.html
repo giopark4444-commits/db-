@@ -1,0 +1,831 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+<meta name="theme-color" content="#1b1410" />
+<title>VU·SONO — Medidor de decibeles retro</title>
+<style>
+  :root{
+    --ivory:#f3e7c8;
+    --ivory-dark:#e6d5a8;
+    --amber:#e8a13a;
+    --amber-glow:#ffc15e;
+    --ink:#2a1d10;
+    --red:#c0392b;
+    --green:#4caf50;
+    --yellow:#f4c430;
+    --bezel:#1b1410;
+    --bezel-2:#332518;
+    --brass:#b8893b;
+    --brass-light:#e8c884;
+    /* variables de carátula (tematizables) */
+    --face-hi:#fbf2d8; --face:#f3e7c8; --face-lo:#e6d5a8;
+    --tick:#3a2a16; --tick-red:#9a2b1c;
+    --units:#7a6033; --wlabel:#9a7c4a;
+    --needle-dark:#1c140a; --needle-red:#c0392b;
+    --lcd:#ffc15e; --lcd-glow:rgba(255,170,70,.55);
+  }
+  html[data-theme="noir"]{
+    --face-hi:#3c3c42; --face:#242428; --face-lo:#141417;
+    --tick:#e8a13a; --tick-red:#ff7043;
+    --units:#b88a3a; --wlabel:#c8923a;
+    --needle-dark:#f0e0c0; --needle-red:#ff5a3c;
+    --lcd:#ffc15e; --lcd-glow:rgba(255,170,70,.55);
+  }
+  html[data-theme="nocturne"]{
+    --face-hi:#2c3e66; --face:#1a2742; --face-lo:#0f1a30;
+    --tick:#a8c8ff; --tick-red:#ff9a7a;
+    --units:#6f9ad6; --wlabel:#7fa8d8;
+    --needle-dark:#dfeaff; --needle-red:#ff7a5a;
+    --lcd:#7fd4ff; --lcd-glow:rgba(90,180,255,.55);
+  }
+  *{ box-sizing:border-box; -webkit-tap-highlight-color:transparent; }
+  html,body{ height:100%; margin:0; }
+  body{
+    font-family:"Helvetica Neue",Arial,sans-serif;
+    background:
+      radial-gradient(120% 90% at 50% -10%, #4a3826 0%, #2c2014 45%, #160f08 100%);
+    color:var(--ivory);
+    display:flex; align-items:center; justify-content:center;
+    min-height:100%; padding:18px;
+    overflow-x:hidden;
+  }
+
+  /* ======================= GABINETE ======================= */
+  .cabinet{
+    width:min(440px,96vw);
+    background:
+      linear-gradient(180deg,#3a2a18 0%, #281c10 100%);
+    border-radius:26px;
+    padding:18px;
+    box-shadow:
+      0 2px 1px rgba(255,220,150,.18) inset,
+      0 -3px 8px rgba(0,0,0,.6) inset,
+      0 30px 60px rgba(0,0,0,.6),
+      0 8px 18px rgba(0,0,0,.45);
+    position:relative;
+    border:1px solid #1a1208;
+  }
+  /* veta de madera sutil */
+  .cabinet::before{
+    content:""; position:absolute; inset:0; border-radius:26px; pointer-events:none;
+    background:repeating-linear-gradient(96deg, rgba(0,0,0,.05) 0 3px, rgba(255,255,255,.012) 3px 7px);
+    mix-blend-mode:overlay; opacity:.5;
+  }
+  .screw{ width:13px;height:13px;border-radius:50%;
+    background:radial-gradient(circle at 35% 30%, #d9c089, #7a5a26 60%, #3a2a12);
+    box-shadow:0 1px 1px rgba(255,255,255,.25) inset, 0 1px 2px rgba(0,0,0,.6);
+    position:absolute; }
+  .screw::after{ content:""; position:absolute; inset:3px; border-top:1.5px solid rgba(0,0,0,.55);
+    transform:rotate(35deg); border-radius:2px; }
+  .screw.tl{ top:9px; left:9px;} .screw.tr{ top:9px; right:9px;}
+  .screw.bl{ bottom:9px; left:9px;} .screw.br{ bottom:9px; right:9px;}
+
+  .brand{
+    text-align:center; letter-spacing:.42em; font-size:12px; font-weight:700;
+    color:var(--brass-light); text-shadow:0 1px 0 #000; margin:2px 0 12px;
+    padding-left:.42em;
+  }
+  .brand small{ display:block; letter-spacing:.2em; font-size:8.5px; color:#9a7c4a; font-weight:600; margin-top:3px;}
+
+  /* ======================= CARÁTULA DEL VU ======================= */
+  .meter-face{
+    position:relative; border-radius:14px; overflow:hidden;
+    background:
+      radial-gradient(120% 130% at 50% 8%, var(--face-hi) 0%, var(--face) 42%, var(--face-lo) 100%);
+    border:2px solid #0c0905;
+    box-shadow:0 0 0 5px #241a0e, 0 8px 18px rgba(0,0,0,.5) inset, 0 2px 4px rgba(0,0,0,.6);
+    padding:6px 6px 0;
+  }
+  .meter-face svg{ display:block; width:100%; height:auto; }
+  /* reflejo de vidrio */
+  .glass{
+    position:absolute; inset:0; pointer-events:none; border-radius:14px;
+    background:linear-gradient(125deg, rgba(255,255,255,.34) 0%, rgba(255,255,255,.05) 22%, transparent 42%);
+    mix-blend-mode:screen;
+  }
+  .units{ position:absolute; left:50%; transform:translateX(-50%); bottom:30px;
+    font-size:10px; letter-spacing:.34em; color:var(--units); font-weight:700; padding-left:.34em;}
+  .wlabel{ position:absolute; top:10px; right:14px; font-size:9px; letter-spacing:.18em;
+    color:var(--wlabel); font-weight:700;}
+  /* ticks, etiquetas y aguja siguen el tema */
+  #dial .tk{ stroke:var(--tick); }
+  #dial .tk.red{ stroke:var(--tick-red); }
+  #dial .lb{ fill:var(--tick); }
+  #dial .lb.red{ fill:var(--tick-red); }
+  #dial #needle line{ stroke:var(--needle-dark); }
+  #dial #needle line.nred{ stroke:var(--needle-red); }
+
+  /* ======================= LECTOR DIGITAL ======================= */
+  .readout{
+    margin-top:14px; display:flex; gap:10px;
+  }
+  .lcd{
+    flex:1; background:#0c1410; border-radius:10px; padding:10px 12px;
+    border:1px solid #000;
+    box-shadow:0 2px 5px rgba(0,0,0,.6) inset, 0 1px 0 rgba(255,255,255,.05);
+    position:relative; overflow:hidden;
+  }
+  .lcd::after{ content:""; position:absolute; inset:0;
+    background:repeating-linear-gradient(0deg, rgba(0,0,0,.18) 0 2px, transparent 2px 4px); pointer-events:none;}
+  .lcd .big{
+    font-family:"Courier New",monospace; font-weight:700; font-size:46px; line-height:1;
+    color:var(--lcd);
+    text-shadow:0 0 6px var(--lcd-glow), 0 0 18px var(--lcd-glow);
+    letter-spacing:1px;
+  }
+  .lcd .big .u{ font-size:16px; margin-left:6px; opacity:.85; letter-spacing:1px;}
+  .lcd .sub{ font-size:9px; letter-spacing:.2em; color:#5e8a6a; margin-top:5px; text-transform:uppercase;}
+  .stats{
+    width:108px; display:flex; flex-direction:column; gap:6px;
+  }
+  .stat{
+    background:#0c1410; border-radius:8px; padding:6px 9px; border:1px solid #000;
+    box-shadow:0 2px 4px rgba(0,0,0,.5) inset;
+    display:flex; justify-content:space-between; align-items:baseline;
+  }
+  .stat b{ font-family:"Courier New",monospace; font-size:16px; color:#9fe6b0; text-shadow:0 0 5px rgba(80,220,120,.5);}
+  .stat span{ font-size:8.5px; letter-spacing:.12em; color:#5e8a6a; font-weight:700;}
+  .stat.peak b{ color:#ffd27a; text-shadow:0 0 5px rgba(255,180,80,.6);}
+
+  /* ======================= ESCALERA DE LEDS ======================= */
+  .ladder{ margin-top:12px; display:flex; gap:3px; height:16px; align-items:stretch;}
+  .ladder i{ flex:1; border-radius:2px; background:#241a10;
+    box-shadow:0 0 0 1px rgba(0,0,0,.5) inset; opacity:.32; transition:opacity .04s;}
+  .ladder i.on{ opacity:1; }
+
+  /* ======================= OSCILOSCOPIO ======================= */
+  .scope{ margin-top:12px; position:relative; border-radius:10px; overflow:hidden;
+    background:radial-gradient(120% 120% at 50% 30%, #0e1c12 0%, #07120b 100%);
+    border:1px solid #000; box-shadow:0 2px 6px rgba(0,0,0,.6) inset, 0 0 0 4px #241a0e;
+    height:96px;}
+  .scope canvas{ display:block; width:100%; height:100%;}
+  .scope::after{ content:""; position:absolute; inset:0; pointer-events:none;
+    background:repeating-linear-gradient(0deg, rgba(0,0,0,.22) 0 2px, transparent 2px 4px);}
+  .scope-label{ position:absolute; top:6px; left:9px; font-size:8px; letter-spacing:.2em;
+    color:#3f7a52; font-weight:700;}
+
+  /* ======================= DOSÍMETRO ======================= */
+  .dose{ margin-top:12px; background:#1b1410; border-radius:10px; padding:9px 11px 10px;
+    border:1px solid #000; box-shadow:0 2px 5px rgba(0,0,0,.5) inset;}
+  .dose-head{ display:flex; justify-content:space-between; align-items:baseline; margin-bottom:7px;}
+  .dose-title{ font-size:9px; letter-spacing:.18em; color:#8a6f44; font-weight:700;}
+  .dose-pct{ font-family:"Courier New",monospace; font-weight:700; font-size:17px; color:#9fe6b0;
+    text-shadow:0 0 5px rgba(80,220,120,.4);}
+  .dose-bar{ height:9px; border-radius:5px; background:#0c1410; overflow:hidden;
+    box-shadow:0 1px 2px rgba(0,0,0,.6) inset;}
+  .dose-bar i{ display:block; height:100%; width:0%; border-radius:5px; background:var(--green);
+    transition:width .25s, background .25s;}
+  .dose-foot{ margin-top:6px; font-size:9px; letter-spacing:.06em; color:#5e8a6a; font-weight:600;}
+  .dose.warn .dose-pct{ color:#ff8a6a; text-shadow:0 0 6px rgba(255,90,50,.6);}
+  .dose.warn .dose-foot{ color:#e08a6a;}
+
+  /* ======================= CONTROLES ======================= */
+  .controls{ margin-top:16px; display:flex; gap:10px; align-items:center;}
+  .btn{
+    flex:1; cursor:pointer; border:none; border-radius:11px; padding:13px 10px;
+    font-weight:700; letter-spacing:.12em; font-size:12.5px; text-transform:uppercase;
+    color:#2a1d10;
+    background:linear-gradient(180deg, var(--brass-light), var(--brass) 80%);
+    box-shadow:0 2px 0 #6e511f, 0 5px 10px rgba(0,0,0,.4), 0 1px 0 rgba(255,255,255,.4) inset;
+    transition:transform .06s, box-shadow .06s; user-select:none;
+  }
+  .btn:active{ transform:translateY(2px); box-shadow:0 0 0 #6e511f, 0 2px 5px rgba(0,0,0,.4) inset;}
+  .btn.power{ flex:1.3; }
+  .btn.power.live{ background:linear-gradient(180deg,#e88a5a,#c0392b 85%); box-shadow:0 2px 0 #7d1f15, 0 5px 12px rgba(192,57,43,.5), 0 1px 0 rgba(255,255,255,.3) inset; color:#fff;}
+  .btn.ghost{ background:linear-gradient(180deg,#403122,#2c2014); color:var(--brass-light); box-shadow:0 2px 0 #160f08, 0 4px 8px rgba(0,0,0,.4), 0 1px 0 rgba(255,255,255,.08) inset; flex:.85;}
+
+  /* fila inferior: ponderación + LED de encendido */
+  .strip{ margin-top:12px; display:flex; align-items:center; gap:10px; justify-content:space-between; flex-wrap:wrap;}
+  .themes{ display:flex; gap:7px; }
+  .sw{ width:24px; height:24px; border-radius:50%; cursor:pointer; padding:0;
+    border:2px solid #160f08;
+    background:linear-gradient(135deg, var(--s1) 0 50%, var(--s2) 50% 100%);
+    box-shadow:0 1px 3px rgba(0,0,0,.5), 0 1px 0 rgba(255,255,255,.15) inset; transition:transform .08s;}
+  .sw:active{ transform:scale(.92); }
+  .sw.sel{ outline:2px solid var(--brass-light); outline-offset:2px; }
+  .toggle{ display:flex; background:#1b1410; border-radius:9px; padding:3px; gap:2px; border:1px solid #000;
+    box-shadow:0 2px 4px rgba(0,0,0,.5) inset;}
+  .toggle button{ border:none; background:transparent; color:#8a6f44; font-weight:700; font-size:11px;
+    padding:6px 12px; border-radius:7px; cursor:pointer; letter-spacing:.08em;}
+  .toggle button.sel{ background:linear-gradient(180deg,var(--brass-light),var(--brass)); color:#241a0e;
+    box-shadow:0 1px 3px rgba(0,0,0,.4);}
+  .powerled{ display:flex; align-items:center; gap:7px; font-size:9px; letter-spacing:.16em; color:#8a6f44; font-weight:700;}
+  .powerled .dot{ width:11px;height:11px;border-radius:50%; background:#3a1410;
+    box-shadow:0 0 0 1px #000 inset; transition:.2s;}
+  .powerled.on .dot{ background:#ff5a3c; box-shadow:0 0 8px rgba(255,80,50,.9), 0 0 14px rgba(255,60,30,.6);}
+
+  /* ======================= PANEL DE CALIBRACIÓN ======================= */
+  .overlay{ position:fixed; inset:0; background:rgba(8,5,2,.72); backdrop-filter:blur(3px);
+    display:none; align-items:center; justify-content:center; padding:18px; z-index:20;}
+  .overlay.show{ display:flex; }
+  .cal{
+    width:min(380px,94vw); background:linear-gradient(180deg,#f6ecd2,#e7d6ab);
+    border-radius:18px; color:#2a1d10; padding:20px; position:relative;
+    box-shadow:0 0 0 5px #241a0e, 0 30px 60px rgba(0,0,0,.6); border:2px solid #0c0905;
+  }
+  .cal h2{ margin:0 0 4px; font-size:17px; letter-spacing:.04em;}
+  .cal p{ margin:0 0 14px; font-size:12px; line-height:1.5; color:#6a512c;}
+  .cal .row{ margin-bottom:14px;}
+  .cal label{ display:block; font-size:10px; font-weight:700; letter-spacing:.12em; text-transform:uppercase; color:#7a6033; margin-bottom:6px;}
+  .liveval{ font-family:"Courier New",monospace; font-weight:700; font-size:28px; color:#9a4318;
+    background:#fff8e8; border-radius:9px; padding:8px 12px; text-align:center; border:1px solid #d3bd8a;}
+  .cal input[type=number]{ width:100%; font-size:20px; font-weight:700; padding:10px 12px; border-radius:9px;
+    border:1px solid #c3aa74; background:#fffaf0; color:#2a1d10; text-align:center; font-family:"Courier New",monospace;}
+  .cal .slider{ display:flex; align-items:center; gap:10px;}
+  .cal input[type=range]{ flex:1; accent-color:var(--brass);}
+  .cal .offval{ font-family:"Courier New",monospace; font-weight:700; min-width:64px; text-align:right; font-size:15px;}
+  .cal .actions{ display:flex; gap:9px; margin-top:6px;}
+  .cal .actions .btn{ flex:1; }
+  .cal .btn.dim{ background:linear-gradient(180deg,#d8c69a,#bda468); box-shadow:0 2px 0 #8a7038;}
+  .cal .presets-row{ border-top:1px dashed #c3aa74; padding-top:14px; margin-top:4px;}
+  .cal .presets-hint{ font-size:10.5px; color:#8a6f44; margin:-2px 0 10px; line-height:1.5;}
+  .presets{ display:flex; flex-wrap:wrap; gap:7px;}
+  .chip{ flex:1 1 28%; cursor:pointer; border:1px solid #c3aa74; border-radius:10px;
+    background:#fffaf0; color:#2a1d10; padding:8px 6px; font-size:11px; font-weight:700;
+    display:flex; flex-direction:column; align-items:center; gap:2px; line-height:1.1;
+    box-shadow:0 1px 2px rgba(0,0,0,.12); transition:transform .06s, background .1s;}
+  .chip small{ font-family:"Courier New",monospace; font-size:9.5px; color:#9a4318; font-weight:700;}
+  .chip:hover{ background:#fff3da;}
+  .chip:active{ transform:translateY(1px); background:var(--brass-light);}
+  .cal .hint{ font-size:10.5px; color:#8a6f44; margin-top:12px; line-height:1.5; border-top:1px dashed #c3aa74; padding-top:10px;}
+  .cal .close{ position:absolute; top:12px; right:14px; cursor:pointer; font-size:22px; color:#9a7c4a; border:none; background:none; line-height:1;}
+
+  .hint-msg{ text-align:center; font-size:10.5px; color:#9a7c4a; margin-top:12px; min-height:14px; letter-spacing:.04em;}
+  a.foot{ color:#9a7c4a;}
+</style>
+</head>
+<body>
+  <main class="cabinet">
+    <span class="screw tl"></span><span class="screw tr"></span>
+    <span class="screw bl"></span><span class="screw br"></span>
+
+    <div class="brand">VU·SONO<small>SOUND LEVEL METER · MODELO 1962</small></div>
+
+    <!-- ===== CARÁTULA VU ANALÓGICA ===== -->
+    <div class="meter-face">
+      <span class="wlabel" id="wlabel">dB(A)</span>
+      <svg id="dial" viewBox="0 0 400 232" aria-label="Medidor analógico de decibeles">
+        <!-- arcos de color, ticks, etiquetas y aguja se generan por JS -->
+        <g id="zones"></g>
+        <g id="ticks"></g>
+        <g id="labels" font-family="Helvetica Neue, Arial, sans-serif"></g>
+        <!-- aguja -->
+        <g id="needle">
+          <line x1="200" y1="210" x2="200" y2="40" stroke="#1c140a" stroke-width="3.2" stroke-linecap="round"/>
+          <line class="nred" x1="200" y1="210" x2="200" y2="40" stroke="#c0392b" stroke-width="1.4" stroke-linecap="round"/>
+          <line x1="200" y1="210" x2="200" y2="232" stroke="#1c140a" stroke-width="4.5" stroke-linecap="round"/>
+        </g>
+        <!-- tornillo central / pivote -->
+        <circle cx="200" cy="210" r="13" fill="#241a0e"/>
+        <circle cx="200" cy="210" r="9" fill="url(#pivot)"/>
+        <defs>
+          <radialGradient id="pivot" cx="38%" cy="32%">
+            <stop offset="0" stop-color="#e8c884"/><stop offset="0.6" stop-color="#9a7330"/><stop offset="1" stop-color="#4a3414"/>
+          </radialGradient>
+        </defs>
+      </svg>
+      <span class="units">DECIBELES · dB SPL</span>
+      <div class="glass"></div>
+    </div>
+
+    <!-- ===== LECTOR DIGITAL ===== -->
+    <div class="readout">
+      <div class="lcd">
+        <div class="big"><span id="dbNow">––.–</span><span class="u">dB</span></div>
+        <div class="sub" id="descNow">presiona ENCENDER</div>
+      </div>
+      <div class="stats">
+        <div class="stat peak"><b id="dbPeak">––</b><span>PICO</span></div>
+        <div class="stat"><b id="dbAvg">––</b><span>PROM</span></div>
+        <div class="stat"><b id="dbMin">––</b><span>MÍN</span></div>
+      </div>
+    </div>
+
+    <!-- ===== ESCALERA DE LEDS ===== -->
+    <div class="ladder" id="ladder"></div>
+
+    <!-- ===== OSCILOSCOPIO / HISTORIAL ===== -->
+    <div class="scope">
+      <canvas id="scope"></canvas>
+      <span class="scope-label">HISTORIAL · 30 s</span>
+    </div>
+
+    <!-- ===== DOSÍMETRO DE EXPOSICIÓN ===== -->
+    <div class="dose" id="dose">
+      <div class="dose-head">
+        <span class="dose-title">DOSIS DE EXPOSICIÓN</span>
+        <span class="dose-pct" id="dosePct">0%</span>
+      </div>
+      <div class="dose-bar"><i id="doseFill"></i></div>
+      <div class="dose-foot"><span id="doseMsg">Tiempo &gt;85 dB: 00:00</span></div>
+    </div>
+
+    <!-- ===== CONTROLES ===== -->
+    <div class="controls">
+      <button class="btn power" id="btnPower">Encender</button>
+      <button class="btn" id="btnCal">Calibrar</button>
+      <button class="btn ghost" id="btnReset">Reiniciar</button>
+    </div>
+
+    <div class="strip">
+      <div class="toggle" id="weighting">
+        <button data-w="A" class="sel">A</button>
+        <button data-w="Z">Z</button>
+      </div>
+      <div class="themes" id="themes" title="Tema de la carátula">
+        <button data-theme="classic" class="sw sel" style="--s1:#f3e7c8;--s2:#b8893b" aria-label="Marfil clásico"></button>
+        <button data-theme="noir" class="sw" style="--s1:#242428;--s2:#e8a13a" aria-label="Negra ámbar"></button>
+        <button data-theme="nocturne" class="sw" style="--s1:#1a2742;--s2:#7fd4ff" aria-label="Azul nocturno"></button>
+      </div>
+      <div class="powerled" id="powerled"><span class="dot"></span>POWER</div>
+    </div>
+
+    <div class="hint-msg" id="hint">Calibra con un sonómetro de referencia para mayor precisión.</div>
+  </main>
+
+  <!-- ===== OVERLAY DE CALIBRACIÓN ===== -->
+  <div class="overlay" id="overlay">
+    <div class="cal">
+      <button class="close" id="calClose">×</button>
+      <h2>Calibración</h2>
+      <p>El micrófono entrega un nivel relativo. Para mostrar dB SPL reales, indícale cuánto marca un sonómetro confiable en este mismo momento y lugar.</p>
+
+      <div class="row">
+        <label>Lectura actual sin calibrar</label>
+        <div class="liveval"><span id="calLive">––.–</span> dB</div>
+      </div>
+
+      <div class="row">
+        <label>Valor de referencia (sonómetro real)</label>
+        <input type="number" id="calRef" inputmode="decimal" placeholder="ej. 65.0" step="0.1" />
+      </div>
+
+      <div class="row">
+        <label>Ajuste manual (offset)</label>
+        <div class="slider">
+          <input type="range" id="calSlider" min="-30" max="120" step="0.5" value="90" />
+          <span class="offval"><span id="calOff">+90.0</span></span>
+        </div>
+      </div>
+
+      <div class="actions">
+        <button class="btn" id="calApply">Calibrar aquí</button>
+        <button class="btn dim" id="calReset">Restablecer</button>
+      </div>
+
+      <div class="row presets-row">
+        <label>¿No tienes sonómetro? Calibra con un sonido conocido</label>
+        <p class="presets-hint">Coloca el teléfono en la situación indicada y toca el botón: la app mide ~1&nbsp;s y ajusta la escala a ese nivel típico.</p>
+        <div class="presets" id="presets">
+          <button class="chip" data-db="30">🤫 Silencio<small>30 dB</small></button>
+          <button class="chip" data-db="40">😶 Susurro<small>40 dB</small></button>
+          <button class="chip" data-db="60">🗣️ Conversación<small>60 dB</small></button>
+          <button class="chip" data-db="75">🚗 Tráfico<small>75 dB</small></button>
+          <button class="chip" data-db="85">🏙️ Calle ruidosa<small>85 dB</small></button>
+        </div>
+      </div>
+
+      <div class="hint">Consejo: también puedes mover el deslizador a mano hasta que la aguja coincida con un nivel que conozcas. La calibración se guarda automáticamente.</div>
+    </div>
+  </div>
+
+<script>
+(()=>{
+  "use strict";
+
+  /* ============ CONFIG DEL DIAL ============ */
+  const DB_MIN=30, DB_MAX=120;      // rango de la escala
+  const A_DEG=-62, B_DEG=62;        // ángulos extremos de la aguja (0 = arriba)
+  const CX=200, CY=210, R=168;      // pivote y radio de los ticks
+  const NS="http://www.w3.org/2000/svg";
+
+  const dbToAngle = db => {
+    const t=(clamp(db,DB_MIN,DB_MAX)-DB_MIN)/(DB_MAX-DB_MIN);
+    return A_DEG + t*(B_DEG-A_DEG);
+  };
+  const polar = (angDeg, r)=>{
+    const a=angDeg*Math.PI/180;
+    return [CX + r*Math.sin(a), CY - r*Math.cos(a)];
+  };
+  function clamp(v,a,b){ return v<a?a:v>b?b:v; }
+
+  /* ============ DIBUJAR LA CARÁTULA ============ */
+  const zones=document.getElementById('zones');
+  const ticksG=document.getElementById('ticks');
+  const labelsG=document.getElementById('labels');
+
+  // arcos de color por tramos
+  const bands=[
+    [30,70,'#5a8a3c'],   // verde
+    [70,85,'#c9a227'],   // amarillo
+    [85,100,'#cf7a1e'],  // naranja
+    [100,120,'#b5301f'], // rojo
+  ];
+  function arcPath(d0,d1,r){
+    const [x0,y0]=polar(dbToAngle(d0),r);
+    const [x1,y1]=polar(dbToAngle(d1),r);
+    const large = Math.abs(dbToAngle(d1)-dbToAngle(d0))>180?1:0;
+    return `M ${x0} ${y0} A ${r} ${r} 0 ${large} 1 ${x1} ${y1}`;
+  }
+  bands.forEach(([d0,d1,c])=>{
+    const p=document.createElementNS(NS,'path');
+    p.setAttribute('d',arcPath(d0,d1,R+9));
+    p.setAttribute('stroke',c); p.setAttribute('stroke-width','7');
+    p.setAttribute('fill','none'); p.setAttribute('stroke-linecap','butt');
+    zones.appendChild(p);
+  });
+
+  // ticks: mayores cada 10, menores cada 5
+  for(let db=DB_MIN; db<=DB_MAX; db+=5){
+    const major = db%10===0;
+    const ang=dbToAngle(db);
+    const [x0,y0]=polar(ang, R);
+    const [x1,y1]=polar(ang, R-(major?18:10));
+    const l=document.createElementNS(NS,'line');
+    l.setAttribute('x1',x0);l.setAttribute('y1',y0);
+    l.setAttribute('x2',x1);l.setAttribute('y2',y1);
+    l.setAttribute('class', db>=100?'tk red':'tk');
+    l.setAttribute('stroke-width', major?2.4:1.2);
+    ticksG.appendChild(l);
+    if(major){
+      const [lx,ly]=polar(ang, R-34);
+      const t=document.createElementNS(NS,'text');
+      t.setAttribute('x',lx);t.setAttribute('y',ly+4);
+      t.setAttribute('text-anchor','middle');
+      t.setAttribute('font-size','15');
+      t.setAttribute('font-weight','700');
+      t.setAttribute('class', db>=100?'lb red':'lb');
+      t.textContent=db;
+      labelsG.appendChild(t);
+    }
+  }
+
+  /* ============ ESCALERA DE LEDS ============ */
+  const ladder=document.getElementById('ladder');
+  const LED_N=28;
+  const leds=[];
+  for(let i=0;i<LED_N;i++){
+    const el=document.createElement('i');
+    const frac=i/(LED_N-1);
+    const col = frac<0.55?'#4caf50' : frac<0.78?'#f4c430' : '#e8552d';
+    el.dataset.col=col;
+    el.style.background='#241a10';
+    ladder.appendChild(el); leds.push(el);
+  }
+
+  /* ============ ESTADO ============ */
+  const needle=document.getElementById('needle');
+  const elNow=document.getElementById('dbNow');
+  const elDesc=document.getElementById('descNow');
+  const elPeak=document.getElementById('dbPeak');
+  const elAvg=document.getElementById('dbAvg');
+  const elMin=document.getElementById('dbMin');
+  const btnPower=document.getElementById('btnPower');
+  const powerled=document.getElementById('powerled');
+  const hint=document.getElementById('hint');
+
+  let audioCtx=null, analyser=null, micStream=null, raf=null, srcNode=null;
+  let running=false;
+  let weighting='A';
+  let offset = parseFloat(localStorage.getItem('vusono.offset'));
+  if(isNaN(offset)) offset=90;          // offset por defecto razonable
+  let needleDb=DB_MIN;                    // posición suavizada de la aguja
+
+  /* ============ OSCILOSCOPIO ============ */
+  const scopeCv=document.getElementById('scope');
+  const sctx=scopeCv.getContext('2d');
+  const HIST_SECONDS=30, HIST_HZ=20, HIST_N=HIST_SECONDS*HIST_HZ; // 600 muestras
+  const history=new Array(HIST_N).fill(null);
+  let lastPush=0;
+  let scopeW=0, scopeH=0;
+  function sizeScope(){
+    const r=scopeCv.getBoundingClientRect();
+    const dpr=window.devicePixelRatio||1;
+    scopeW=r.width; scopeH=r.height;
+    scopeCv.width=Math.round(r.width*dpr);
+    scopeCv.height=Math.round(r.height*dpr);
+    sctx.setTransform(dpr,0,0,dpr,0,0);
+    drawScope();
+  }
+  window.addEventListener('resize', sizeScope);
+
+  function pushHistory(db){
+    const now=performance.now();
+    if(now-lastPush < 1000/HIST_HZ) return;
+    lastPush=now;
+    history.push(clamp(db,DB_MIN,DB_MAX)); history.shift();
+  }
+
+  function drawScope(){
+    if(!scopeW) return;
+    const W=scopeW, H=scopeH, pad=4;
+    sctx.clearRect(0,0,W,H);
+    // rejilla horizontal en niveles de referencia
+    sctx.lineWidth=1; sctx.font='8px Courier New';
+    [40,60,80,100].forEach(lv=>{
+      const y=H-pad-((lv-DB_MIN)/(DB_MAX-DB_MIN))*(H-2*pad);
+      sctx.strokeStyle='rgba(80,200,120,.14)'; sctx.beginPath();
+      sctx.moveTo(0,y); sctx.lineTo(W,y); sctx.stroke();
+      sctx.fillStyle='rgba(120,220,150,.4)'; sctx.fillText(lv, W-20, y-2);
+    });
+    // trazo de fósforo
+    sctx.beginPath();
+    let started=false;
+    for(let i=0;i<HIST_N;i++){
+      const v=history[i]; if(v==null){ started=false; continue; }
+      const x=(i/(HIST_N-1))*W;
+      const y=H-pad-((v-DB_MIN)/(DB_MAX-DB_MIN))*(H-2*pad);
+      if(!started){ sctx.moveTo(x,y); started=true; } else sctx.lineTo(x,y);
+    }
+    sctx.strokeStyle='#5af08c'; sctx.lineWidth=1.6;
+    sctx.shadowColor='rgba(90,240,140,.8)'; sctx.shadowBlur=6;
+    sctx.stroke(); sctx.shadowBlur=0;
+  }
+  let peak=-Infinity, min=Infinity, sum=0, count=0, peakHold=DB_MIN, peakHoldT=0;
+  let dose=0, timeAbove=0, lastFrame=0;   // dosis NIOSH, segundos >85 dB
+
+  const elDosePct=document.getElementById('dosePct');
+  const elDoseFill=document.getElementById('doseFill');
+  const elDoseMsg=document.getElementById('doseMsg');
+  const elDose=document.getElementById('dose');
+
+  function accumulateDose(db){
+    const now=performance.now();
+    if(lastFrame){
+      const dt=Math.min((now-lastFrame)/1000, 0.5);   // s (acotado por si hubo pausa)
+      const allowed=28800*Math.pow(2,(85-db)/3);        // tiempo permitido NIOSH (s)
+      dose += dt/allowed;
+      if(db>=85) timeAbove+=dt;
+    }
+    lastFrame=now;
+  }
+  function fmtTime(s){
+    s=Math.floor(s); const m=Math.floor(s/60);
+    return String(m).padStart(2,'0')+':'+String(s%60).padStart(2,'0');
+  }
+  function updateDose(){
+    const pct=dose*100;
+    elDosePct.textContent = pct<1000 ? pct.toFixed(pct<10?1:0)+'%' : '999+%';
+    elDoseFill.style.width=Math.min(100,pct)+'%';
+    elDoseFill.style.background = pct>=100?'var(--red)':pct>=50?'var(--yellow)':'var(--green)';
+    elDose.classList.toggle('warn', pct>=100);
+    elDoseMsg.textContent='Tiempo >85 dB: '+fmtTime(timeAbove)+(pct>=100?' · ¡límite diario alcanzado!':'');
+  }
+
+  // curva de ponderación A (ganancia en dB por frecuencia)
+  function aWeight(f){
+    const f2=f*f;
+    const ra=(12194**2*f2*f2)/((f2+20.6**2)*Math.sqrt((f2+107.7**2)*(f2+737.9**2))*(f2+12194**2));
+    return 20*Math.log10(ra)+2.00;
+  }
+
+  /* ============ AUDIO ============ */
+  async function start(){
+    try{
+      micStream=await navigator.mediaDevices.getUserMedia({audio:{
+        echoCancellation:false, noiseSuppression:false, autoGainControl:false
+      }});
+    }catch(e){
+      hint.textContent='No se pudo acceder al micrófono. Revisa los permisos del navegador.';
+      return;
+    }
+    audioCtx=new (window.AudioContext||window.webkitAudioContext)();
+    srcNode=audioCtx.createMediaStreamSource(micStream);
+    analyser=audioCtx.createAnalyser();
+    analyser.fftSize=4096;
+    analyser.smoothingTimeConstant=0.0;
+    srcNode.connect(analyser);
+
+    running=true;
+    btnPower.textContent='Apagar';
+    btnPower.classList.add('live');
+    powerled.classList.add('on');
+    elDesc.textContent='midiendo…';
+    hint.textContent='Mantén el dispositivo quieto para una lectura estable.';
+    resetStats();
+    loop();
+  }
+
+  function stop(){
+    running=false;
+    if(raf) cancelAnimationFrame(raf);
+    if(micStream) micStream.getTracks().forEach(t=>t.stop());
+    if(audioCtx) audioCtx.close();
+    audioCtx=analyser=micStream=srcNode=null;
+    btnPower.textContent='Encender';
+    btnPower.classList.remove('live');
+    powerled.classList.remove('on');
+    elDesc.textContent='detenido';
+    // dejar la aguja caer suavemente a cero
+    fallToZero();
+  }
+
+  function fallToZero(){
+    if(running) return;
+    needleDb += (DB_MIN-needleDb)*0.12;
+    setNeedle(needleDb);
+    if(Math.abs(needleDb-DB_MIN)>0.4) requestAnimationFrame(fallToZero);
+  }
+
+  const freqBuf = new Float32Array(2048);
+
+  function measure(){
+    // datos de frecuencia en dBFS
+    analyser.getFloatFrequencyData(freqBuf.subarray(0, analyser.frequencyBinCount));
+    const bins=analyser.frequencyBinCount;
+    const nyq=audioCtx.sampleRate/2;
+    let power=0;
+    for(let i=1;i<bins;i++){
+      const mag=freqBuf[i];                 // dBFS
+      if(mag===-Infinity) continue;
+      const f=i*nyq/bins;
+      let p=Math.pow(10, mag/10);           // potencia lineal
+      if(weighting==='A'){
+        p *= Math.pow(10, aWeight(f)/10);
+      }
+      power+=p;
+    }
+    const dbfs = 10*Math.log10(power+1e-12);
+    return dbfs + offset;                    // dB SPL aprox.
+  }
+
+  function loop(){
+    if(!running) return;
+    const db = measure();
+    const shown = clamp(db, 0, 140);
+
+    // suavizado tipo balística VU (ataque rápido, caída lenta)
+    const k = shown>needleDb ? 0.5 : 0.12;
+    needleDb += (clamp(shown,DB_MIN,DB_MAX)-needleDb)*k;
+    setNeedle(needleDb);
+
+    // lectura digital
+    elNow.textContent = shown.toFixed(1).padStart(4,'0');
+    elDesc.textContent = describe(shown);
+
+    // estadísticas
+    if(shown>peak) peak=shown;
+    if(shown<min) min=shown;
+    sum+=shown; count++;
+    elPeak.textContent=Math.round(peak);
+    elAvg.textContent=Math.round(sum/count);
+    elMin.textContent=Math.round(min);
+
+    // peak-hold visual en la escalera
+    const now=performance.now();
+    if(shown>=peakHold || now-peakHoldT>900){ peakHold=shown; peakHoldT=now; }
+
+    // escalera de LEDs
+    const lit = Math.round(((clamp(shown,DB_MIN,DB_MAX)-DB_MIN)/(DB_MAX-DB_MIN))*LED_N);
+    const holdIdx = Math.round(((clamp(peakHold,DB_MIN,DB_MAX)-DB_MIN)/(DB_MAX-DB_MIN))*LED_N)-1;
+    for(let i=0;i<LED_N;i++){
+      const on = i<lit || i===holdIdx;
+      leds[i].classList.toggle('on', on);
+      leds[i].style.background = on ? leds[i].dataset.col : '#241a10';
+    }
+
+    // dosis de exposición
+    accumulateDose(shown);
+    updateDose();
+
+    // historial / osciloscopio
+    pushHistory(shown);
+    drawScope();
+
+    // sincronizar slider/overlay si está abierto
+    if(overlay.classList.contains('show')) calLive.textContent=db.toFixed(1);
+
+    raf=requestAnimationFrame(loop);
+  }
+
+  function setNeedle(db){
+    needle.setAttribute('transform', `rotate(${dbToAngle(db)} ${CX} ${CY})`);
+  }
+  setNeedle(DB_MIN);
+  sizeScope();
+
+  function describe(db){
+    if(db<35) return 'silencio · biblioteca';
+    if(db<50) return 'ambiente tranquilo';
+    if(db<65) return 'conversación normal';
+    if(db<80) return 'tráfico · oficina ruidosa';
+    if(db<90) return 'ruidoso · precaución';
+    if(db<100) return 'muy ruidoso';
+    return '¡peligroso! usa protección';
+  }
+
+  function resetStats(){
+    peak=-Infinity; min=Infinity; sum=0; count=0; peakHold=DB_MIN;
+    elPeak.textContent='––'; elAvg.textContent='––'; elMin.textContent='––';
+    dose=0; timeAbove=0; lastFrame=0; updateDose();
+    history.fill(null); drawScope();
+  }
+
+  /* ============ CONTROLES ============ */
+  btnPower.addEventListener('click', ()=> running?stop():start());
+  document.getElementById('btnReset').addEventListener('click', ()=>{
+    resetStats();
+    if(running){ elDesc.textContent='estadísticas reiniciadas'; }
+  });
+
+  // ===== selector de temas de carátula =====
+  function applyTheme(name){
+    document.documentElement.dataset.theme = name==='classic'?'':name;
+    document.querySelectorAll('#themes .sw').forEach(s=>s.classList.toggle('sel', s.dataset.theme===name));
+    localStorage.setItem('vusono.theme', name);
+  }
+  document.querySelectorAll('#themes .sw').forEach(s=>{
+    s.addEventListener('click', ()=>applyTheme(s.dataset.theme));
+  });
+  applyTheme(localStorage.getItem('vusono.theme') || 'classic');
+
+  document.querySelectorAll('#weighting button').forEach(b=>{
+    b.addEventListener('click', ()=>{
+      weighting=b.dataset.w;
+      document.querySelectorAll('#weighting button').forEach(x=>x.classList.toggle('sel', x===b));
+      document.getElementById('wlabel').textContent = weighting==='A' ? 'dB(A)' : 'dB(Z)';
+    });
+  });
+
+  /* ============ CALIBRACIÓN ============ */
+  const overlay=document.getElementById('overlay');
+  const calLive=document.getElementById('calLive');
+  const calRef=document.getElementById('calRef');
+  const calSlider=document.getElementById('calSlider');
+  const calOff=document.getElementById('calOff');
+
+  function syncOffUI(){
+    calSlider.value=offset.toFixed(1);
+    calOff.textContent=(offset>=0?'+':'')+offset.toFixed(1);
+  }
+  document.getElementById('btnCal').addEventListener('click', ()=>{
+    syncOffUI(); calRef.value='';
+    overlay.classList.add('show');
+    if(!running) calLive.textContent='––.–';
+  });
+  document.getElementById('calClose').addEventListener('click', ()=>overlay.classList.remove('show'));
+  overlay.addEventListener('click', e=>{ if(e.target===overlay) overlay.classList.remove('show'); });
+
+  calSlider.addEventListener('input', ()=>{
+    offset=parseFloat(calSlider.value);
+    calOff.textContent=(offset>=0?'+':'')+offset.toFixed(1);
+    saveOffset();
+  });
+
+  let calibrating=false;
+  // Promedia la lectura ~1 s y ajusta el offset para que el nivel actual = refDb
+  function calibrateTo(refDb, label){
+    if(!running){ flashHint('Enciende el medidor para calibrar.'); return; }
+    if(calibrating) return;
+    calibrating=true;
+    flashHint('Midiendo referencia…');
+    const samples=[]; const t0=performance.now();
+    (function sample(){
+      samples.push(measure()-offset);       // nivel relativo (sin offset)
+      if(performance.now()-t0<900){ setTimeout(sample,40); return; }
+      const rel=samples.reduce((a,b)=>a+b,0)/samples.length;
+      offset = refDb - rel;
+      saveOffset(); syncOffUI();
+      calibrating=false;
+      flashHint('Calibrado con '+label+': ahora marca ~'+refDb.toFixed(0)+' dB.');
+      overlay.classList.remove('show');
+    })();
+  }
+
+  document.getElementById('calApply').addEventListener('click', ()=>{
+    const ref=parseFloat(calRef.value);
+    if(isNaN(ref)){ flashHint('Escribe el valor de tu sonómetro de referencia.'); return; }
+    calibrateTo(ref, 'la referencia');
+  });
+
+  // calibración rápida con sonidos conocidos
+  document.querySelectorAll('#presets .chip').forEach(c=>{
+    c.addEventListener('click', ()=> calibrateTo(parseFloat(c.dataset.db), c.textContent.replace(/\d+\s*dB/,'').trim()));
+  });
+
+  document.getElementById('calReset').addEventListener('click', ()=>{
+    offset=90; saveOffset(); syncOffUI();
+    flashHint('Calibración restablecida (offset +90).');
+  });
+
+  function saveOffset(){ localStorage.setItem('vusono.offset', offset.toFixed(2)); }
+  let hintTimer=null;
+  function flashHint(msg){
+    hint.textContent=msg;
+    clearTimeout(hintTimer);
+    hintTimer=setTimeout(()=>{ hint.textContent='Calibra con un sonómetro de referencia para mayor precisión.'; },4000);
+  }
+
+  // teclas: barra espaciadora = encender/apagar
+  document.addEventListener('keydown', e=>{
+    if(e.code==='Space' && !overlay.classList.contains('show') && e.target.tagName!=='INPUT'){
+      e.preventDefault(); running?stop():start();
+    }
+    if(e.key==='Escape') overlay.classList.remove('show');
+  });
+})();
+</script>
+</body>
+</html>
