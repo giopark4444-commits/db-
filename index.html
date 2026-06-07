@@ -129,6 +129,27 @@
   html[data-theme="plano"]{ --ivory:#37474f; }
   html[data-theme="minimo"] .chiptheme.sel,
   html[data-theme="minimo"] .toggle button.sel{ color:#fff; }
+
+  /* botones (encendido/ghost) y toggle A·Z afinados por estética */
+  html[data-theme="neon"]{ --ghost-bg:transparent; --ghost-color:#21f0ff; --ghost-shadow:0 0 0 1px #21f0ff inset, 0 0 12px rgba(33,240,255,.4);
+    --live-bg:linear-gradient(180deg,#ff6ec8,#d10f86); --live-color:#fff; --live-shadow:0 0 16px rgba(255,47,176,.7), 0 2px 0 #8a0a5a; }
+  html[data-theme="casete"]{ --live-bg:linear-gradient(180deg,#ff5a5a,#c81f1f); --live-color:#fff; --live-shadow:0 4px 0 #8a1010, 0 6px 10px rgba(0,0,0,.3);
+    --ghost-bg:linear-gradient(180deg,#3a2a14,#241a0c); --ghost-color:#ffe27a; --ghost-shadow:0 4px 0 #160f06; }
+  html[data-theme="cromo"]{ --ghost-bg:linear-gradient(180deg,#ffffff,#dfe9f2); --ghost-color:#2a4d6e; --ghost-shadow:0 1px 0 rgba(255,255,255,.9) inset, 0 2px 5px rgba(70,110,150,.4);
+    --live-bg:linear-gradient(180deg,#ff9a8a,#e23b2e); --live-color:#fff; --live-shadow:0 1px 0 rgba(255,255,255,.5) inset, 0 2px 6px rgba(200,60,40,.45);
+    --toggle-bg:#cdd8e3; --toggle-fg:#5a7894; --toggle-border:#aebfce; --toggle-shadow:0 1px 2px rgba(80,110,140,.3) inset;
+    --scope-bg:linear-gradient(180deg,#eef4fb,#dce7f2); --scope-trace:#2f8fd6; --scope-grid:rgba(60,140,210,.18); --scope-axis:rgba(90,140,180,.6); --scope-glow:rgba(60,150,230,.4);
+    --screen-bg:#eef4fb; --screen-fg:#234a6e; --screen-dim:#6f8aa6; --screen-track:#d6e2ee; --screen-border:#c2d2e0;
+    --screen-shadow:0 1px 2px rgba(120,150,180,.3) inset, 0 0 0 4px #d4dde7; --screen-shadow2:0 1px 2px rgba(120,150,180,.25) inset; --scanline-op:.12; }
+  html[data-theme="plano"]{ --ghost-bg:#eceff1; --ghost-color:#37474f; --ghost-shadow:none;
+    --live-bg:#e53935; --live-color:#fff; --live-shadow:none;
+    --toggle-bg:#eceff1; --toggle-fg:#90a4ae; --toggle-border:#dde2e5; --toggle-shadow:none;
+    --scope-bg:#f5f7f8; --scope-trace:#26a69a; --scope-grid:rgba(38,166,154,.18); --scope-axis:rgba(120,140,150,.6); --scope-glow:rgba(38,166,154,.3);
+    --screen-bg:#f5f7f8; --screen-fg:#37474f; --screen-dim:#90a4ae; --screen-track:#e0e4e7; --screen-border:#e0e4e7;
+    --screen-shadow:0 0 0 2px #eceff1; --screen-shadow2:0 0 0 1px #e0e4e7; --scanline-op:.06; }
+  html[data-theme="minimo"]{ --ghost-bg:transparent; --ghost-color:#1a1a1a; --ghost-shadow:none;
+    --live-bg:#e05a4a; --live-color:#fff; --live-shadow:none;
+    --toggle-bg:#efefec; --toggle-fg:#9a9a96; --toggle-border:#e2e2de; --toggle-shadow:none; }
   *{ box-sizing:border-box; -webkit-tap-highlight-color:transparent; }
   html,body{ height:100%; margin:0; }
   body{
@@ -190,6 +211,82 @@
     padding:6px 6px 0;
   }
   .meter-face svg{ display:block; width:100%; height:auto; }
+
+  /* ===== MEDIDORES ALTERNATIVOS (uno por estética) ===== */
+  .meter-arc,.meter-bars,.meter-ring,.meter-linear{ display:none; }
+  .meter-arc svg,.meter-ring svg{ display:block; width:100%; height:auto; }
+
+  /* — Neón: arco luminoso — */
+  .meter-arc{ position:relative; color:var(--tick,#21f0ff); }
+  #arcFill{ filter:drop-shadow(0 0 6px currentColor) drop-shadow(0 0 14px currentColor);
+    transition:stroke-dashoffset .12s linear; }
+  #arcDot{ filter:drop-shadow(0 0 7px currentColor); }
+  .arc-mid{ position:absolute; left:0; right:0; top:54%; text-align:center; pointer-events:none;
+    font-family:"Courier New",monospace; color:var(--lcd,#ff7ae0);
+    text-shadow:0 0 10px var(--lcd-glow,rgba(255,47,176,.8)); }
+  .arc-mid b{ font-size:clamp(38px,13vw,60px); font-weight:700; }
+  .arc-mid span{ font-size:.4em; margin-left:5px; opacity:.8; }
+
+  /* — Casete: barras VU estéreo — */
+  .meter-bars{ padding:14px 12px 10px; }
+  .vurow{ display:flex; align-items:center; gap:9px; margin-bottom:8px; }
+  .vlab{ width:14px; font-weight:800; font-size:13px; color:var(--tick,#1f3a10); font-family:"Courier New",monospace; }
+  .vsegs{ flex:1; display:flex; gap:2px; height:18px; }
+  .vsegs i{ flex:1; border-radius:1px; background:rgba(0,0,0,.18); opacity:.3; }
+  .vsegs i.on{ opacity:1; }
+  .vuscale{ display:flex; justify-content:space-between; font-size:8.5px; font-weight:700;
+    color:var(--units,#3a5a20); letter-spacing:.05em; padding:0 0 0 23px; }
+
+  /* — Cromo: anillo circular — */
+  .meter-ring{ position:relative; color:var(--brass,#3a8fd6); max-width:280px; margin:6px auto 0; }
+  #ringFill{ transition:stroke-dashoffset .14s linear; filter:drop-shadow(0 2px 3px rgba(0,0,0,.25)); }
+  .ring-mid{ position:absolute; inset:0; display:flex; flex-direction:column; align-items:center; justify-content:center;
+    pointer-events:none; font-family:"Helvetica Neue",Arial,sans-serif; color:var(--ivory,#1c3a50); }
+  .ring-mid b{ font-size:clamp(40px,12vw,58px); font-weight:300; letter-spacing:-1px; }
+  .ring-mid span{ font-size:13px; letter-spacing:.3em; opacity:.6; margin-top:2px; }
+
+  /* — Plano: barra lineal — */
+  .meter-linear{ padding:16px 4px 6px; }
+  .lin-num{ font-family:"Helvetica Neue",Arial,sans-serif; color:var(--ivory,#37474f); margin-bottom:14px; }
+  .lin-num b{ font-size:clamp(46px,15vw,72px); font-weight:500; letter-spacing:-1px; }
+  .lin-num span{ font-size:18px; opacity:.5; margin-left:6px; }
+  .lintrack{ height:14px; border-radius:8px; background:rgba(0,0,0,.08); overflow:hidden; }
+  .lintrack i{ display:block; height:100%; width:0%; border-radius:8px; background:var(--brass,#26a69a);
+    transition:width .14s linear; }
+  .lin-scale{ display:flex; justify-content:space-between; font-size:9px; font-weight:700;
+    color:var(--units,#90a4ae); margin-top:6px; }
+
+  /* conmutación por tema: ocultar la aguja y mostrar el medidor propio */
+  html[data-theme="neon"] .meter-face,
+  html[data-theme="casete"] .meter-face,
+  html[data-theme="cromo"] .meter-face,
+  html[data-theme="plano"] .meter-face,
+  html[data-theme="minimo"] .meter-face{ display:none; }
+  html[data-theme="neon"] .meter-arc{ display:block; }
+  html[data-theme="casete"] .meter-bars{ display:block; }
+  html[data-theme="cromo"] .meter-ring{ display:block; }
+  html[data-theme="plano"] .meter-linear{ display:block; }
+
+  /* el número vive dentro del medidor → ocultar la lectura/escalera duplicada */
+  html[data-theme="neon"] .readout{ display:none; }
+  html[data-theme="casete"] .ladder{ display:none; }
+  html[data-theme="cromo"] .readout,
+  html[data-theme="cromo"] .ladder{ display:none; }
+  html[data-theme="plano"] .readout,
+  html[data-theme="plano"] .ladder{ display:none; }
+
+  /* Mínimo: el número gigante ES la interfaz; se quita lo secundario */
+  html[data-theme="minimo"] .stats,
+  html[data-theme="minimo"] .ladder,
+  html[data-theme="minimo"] .scope,
+  html[data-theme="minimo"] .dose{ display:none; }
+  html[data-theme="minimo"] .readout{ margin-top:8px; }
+  html[data-theme="minimo"] .lcd{ background:transparent; box-shadow:none; padding:6px 4px; }
+  html[data-theme="minimo"] .lcd::after{ display:none; }
+  html[data-theme="minimo"] .lcd .big{ font-size:clamp(60px,21vw,108px); font-weight:200; color:#1a1a1a; text-shadow:none; letter-spacing:-2px; }
+  html[data-theme="minimo"] .lcd .big .u{ font-weight:300; opacity:.4; }
+  html[data-theme="minimo"] .lcd .sub{ color:#b0b0ac; font-size:11px; }
+
   /* reflejo de vidrio */
   .glass{
     position:absolute; inset:0; pointer-events:none; border-radius:var(--face-radius,14px);
@@ -249,27 +346,27 @@
 
   /* ======================= OSCILOSCOPIO ======================= */
   .scope{ margin-top:12px; position:relative; border-radius:10px; overflow:hidden;
-    background:radial-gradient(120% 120% at 50% 30%, #0e1c12 0%, #07120b 100%);
-    border:1px solid #000; box-shadow:0 2px 6px rgba(0,0,0,.6) inset, 0 0 0 4px #241a0e;
+    background:var(--scope-bg, radial-gradient(120% 120% at 50% 30%, #0e1c12 0%, #07120b 100%));
+    border:1px solid var(--screen-border,#000); box-shadow:var(--screen-shadow, 0 2px 6px rgba(0,0,0,.6) inset, 0 0 0 4px #241a0e);
     height:96px;}
   .scope canvas{ display:block; width:100%; height:100%;}
-  .scope::after{ content:""; position:absolute; inset:0; pointer-events:none;
+  .scope::after{ content:""; position:absolute; inset:0; pointer-events:none; opacity:var(--scanline-op,1);
     background:repeating-linear-gradient(0deg, rgba(0,0,0,.22) 0 2px, transparent 2px 4px);}
   .scope-label{ position:absolute; top:6px; left:9px; font-size:8px; letter-spacing:.2em;
-    color:#3f7a52; font-weight:700;}
+    color:var(--screen-dim,#3f7a52); font-weight:700;}
 
   /* ======================= DOSÍMETRO ======================= */
-  .dose{ margin-top:12px; background:#1b1410; border-radius:10px; padding:9px 11px 10px;
-    border:1px solid #000; box-shadow:0 2px 5px rgba(0,0,0,.5) inset;}
+  .dose{ margin-top:12px; background:var(--screen-bg,#1b1410); border-radius:10px; padding:9px 11px 10px;
+    border:1px solid var(--screen-border,#000); box-shadow:var(--screen-shadow2,0 2px 5px rgba(0,0,0,.5) inset);}
   .dose-head{ display:flex; justify-content:space-between; align-items:baseline; margin-bottom:7px;}
-  .dose-title{ font-size:9px; letter-spacing:.18em; color:#8a6f44; font-weight:700;}
-  .dose-pct{ font-family:"Courier New",monospace; font-weight:700; font-size:17px; color:#9fe6b0;
+  .dose-title{ font-size:9px; letter-spacing:.18em; color:var(--screen-dim,#8a6f44); font-weight:700;}
+  .dose-pct{ font-family:"Courier New",monospace; font-weight:700; font-size:17px; color:var(--screen-fg,#9fe6b0);
     text-shadow:0 0 5px rgba(80,220,120,.4);}
-  .dose-bar{ height:9px; border-radius:5px; background:#0c1410; overflow:hidden;
+  .dose-bar{ height:9px; border-radius:5px; background:var(--screen-track,#0c1410); overflow:hidden;
     box-shadow:0 1px 2px rgba(0,0,0,.6) inset;}
   .dose-bar i{ display:block; height:100%; width:0%; border-radius:5px; background:var(--green);
     transition:width .25s, background .25s;}
-  .dose-foot{ margin-top:6px; font-size:9px; letter-spacing:.06em; color:#5e8a6a; font-weight:600;}
+  .dose-foot{ margin-top:6px; font-size:9px; letter-spacing:.06em; color:var(--screen-dim,#5e8a6a); font-weight:600;}
   .dose.warn .dose-pct{ color:#ff8a6a; text-shadow:0 0 6px rgba(255,90,50,.6);}
   .dose.warn .dose-foot{ color:#e08a6a;}
 
@@ -285,8 +382,11 @@
   }
   .btn:active{ transform:translateY(2px); box-shadow:var(--btn-shadow-active, 0 0 0 #6e511f, 0 2px 5px rgba(0,0,0,.4) inset);}
   .btn.power{ flex:1.3; }
-  .btn.power.live{ background:linear-gradient(180deg,#e88a5a,#c0392b 85%); box-shadow:0 2px 0 #7d1f15, 0 5px 12px rgba(192,57,43,.5), 0 1px 0 rgba(255,255,255,.3) inset; color:#fff;}
-  .btn.ghost{ background:linear-gradient(180deg,#403122,#2c2014); color:var(--brass-light); box-shadow:0 2px 0 #160f08, 0 4px 8px rgba(0,0,0,.4), 0 1px 0 rgba(255,255,255,.08) inset; flex:.85;}
+  .btn.power.live{ background:var(--live-bg, linear-gradient(180deg,#e88a5a,#c0392b 85%));
+    box-shadow:var(--live-shadow, 0 2px 0 #7d1f15, 0 5px 12px rgba(192,57,43,.5), 0 1px 0 rgba(255,255,255,.3) inset);
+    color:var(--live-color,#fff);}
+  .btn.ghost{ background:var(--ghost-bg, linear-gradient(180deg,#403122,#2c2014)); color:var(--ghost-color,var(--brass-light));
+    box-shadow:var(--ghost-shadow, 0 2px 0 #160f08, 0 4px 8px rgba(0,0,0,.4), 0 1px 0 rgba(255,255,255,.08) inset); flex:.85;}
 
   /* fila inferior: ponderación + LED de encendido */
   .strip{ margin-top:12px; display:flex; align-items:center; gap:10px; justify-content:space-between; flex-wrap:wrap;}
@@ -303,9 +403,9 @@
     box-shadow:0 1px 0 rgba(255,255,255,.2) inset; }
   .chiptheme:active{ transform:scale(.95); }
   .chiptheme.sel{ background:var(--brass); color:var(--btn-color,#241a0e); border-color:var(--brass-light); }
-  .toggle{ display:flex; background:#1b1410; border-radius:9px; padding:3px; gap:2px; border:1px solid #000;
-    box-shadow:0 2px 4px rgba(0,0,0,.5) inset;}
-  .toggle button{ border:none; background:transparent; color:#8a6f44; font-weight:700; font-size:11px;
+  .toggle{ display:flex; background:var(--toggle-bg,#1b1410); border-radius:9px; padding:3px; gap:2px; border:1px solid var(--toggle-border,#000);
+    box-shadow:var(--toggle-shadow,0 2px 4px rgba(0,0,0,.5) inset);}
+  .toggle button{ border:none; background:transparent; color:var(--toggle-fg,#8a6f44); font-weight:700; font-size:11px;
     padding:6px 12px; border-radius:7px; cursor:pointer; letter-spacing:.08em;}
   .toggle button.sel{ background:linear-gradient(180deg,var(--brass-light),var(--brass)); color:#241a0e;
     box-shadow:0 1px 3px rgba(0,0,0,.4);}
@@ -418,6 +518,46 @@
       </svg>
       <span class="units">DECIBELES · dB SPL</span>
       <div class="glass"></div>
+    </div>
+
+    <!-- ===== NEÓN: arco luminoso ===== -->
+    <div class="meter-arc" aria-hidden="true">
+      <svg viewBox="0 0 400 250">
+        <path id="arcTrack" fill="none" stroke="currentColor" stroke-width="16" stroke-linecap="round" opacity=".16"/>
+        <path id="arcFill" fill="none" stroke="currentColor" stroke-width="16" stroke-linecap="round" pathLength="1000"/>
+        <circle id="arcDot" r="9" fill="currentColor"/>
+      </svg>
+      <div class="arc-mid"><b id="arcNum">62.4</b><span>dB</span></div>
+    </div>
+
+    <!-- ===== CASETE: barras VU estéreo ===== -->
+    <div class="meter-bars" aria-hidden="true">
+      <div class="vurow"><span class="vlab">L</span><div class="vsegs" id="barsL"></div></div>
+      <div class="vurow"><span class="vlab">R</span><div class="vsegs" id="barsR"></div></div>
+      <div class="vuscale"><span>-20</span><span>-10</span><span>-5</span><span>0</span><span>+3</span></div>
+    </div>
+
+    <!-- ===== CROMO: anillo circular ===== -->
+    <div class="meter-ring" aria-hidden="true">
+      <svg viewBox="0 0 240 240">
+        <defs>
+          <linearGradient id="ringGloss" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0" stop-color="#ffffff" stop-opacity=".9"/><stop offset="1" stop-color="#ffffff" stop-opacity="0"/>
+          </linearGradient>
+        </defs>
+        <circle cx="120" cy="120" r="100" fill="none" stroke="currentColor" stroke-width="18" opacity=".15"/>
+        <circle id="ringFill" cx="120" cy="120" r="100" fill="none" stroke="currentColor" stroke-width="18"
+                stroke-linecap="round" pathLength="1000" transform="rotate(-90 120 120)"/>
+        <circle cx="120" cy="120" r="100" fill="none" stroke="url(#ringGloss)" stroke-width="6" opacity=".7"/>
+      </svg>
+      <div class="ring-mid"><b id="ringNum">62.4</b><span>dB</span></div>
+    </div>
+
+    <!-- ===== PLANO: barra lineal ===== -->
+    <div class="meter-linear" aria-hidden="true">
+      <div class="lin-num"><b id="linNum">62.4</b><span>dB</span></div>
+      <div class="lintrack"><i id="linFill"></i></div>
+      <div class="lin-scale"><span>30</span><span>60</span><span>90</span><span>120</span></div>
     </div>
 
     <!-- ===== LECTOR DIGITAL ===== -->
@@ -610,6 +750,51 @@
     ladder.appendChild(el); leds.push(el);
   }
 
+  /* ============ MEDIDORES ALTERNATIVOS ============ */
+  // arco (Neón) y anillo (Cromo)
+  const ARC={cx:200,cy:165,r:118,a0:-135,a1:135};
+  const arcPolar=(a,r)=>{ const rad=a*Math.PI/180; return [ARC.cx+r*Math.sin(rad), ARC.cy-r*Math.cos(rad)]; };
+  const arcTrack=document.getElementById('arcTrack');
+  const arcFill=document.getElementById('arcFill');
+  const arcDot=document.getElementById('arcDot');
+  const arcNum=document.getElementById('arcNum');
+  const ringFill=document.getElementById('ringFill');
+  const ringNum=document.getElementById('ringNum');
+  const linFill=document.getElementById('linFill');
+  const linNum=document.getElementById('linNum');
+  if(arcTrack){
+    const [x0,y0]=arcPolar(ARC.a0,ARC.r), [x1,y1]=arcPolar(ARC.a1,ARC.r);
+    const d=`M ${x0.toFixed(1)} ${y0.toFixed(1)} A ${ARC.r} ${ARC.r} 0 1 1 ${x1.toFixed(1)} ${y1.toFixed(1)}`;
+    arcTrack.setAttribute('d',d); arcFill.setAttribute('d',d);
+    arcFill.style.strokeDasharray='1000'; ringFill.style.strokeDasharray='1000';
+  }
+  // barras VU estéreo (Casete)
+  const BARS_N=26, barL=[], barR=[];
+  function buildBars(box, arr){
+    if(!box) return;
+    for(let i=0;i<BARS_N;i++){
+      const el=document.createElement('i');
+      const f=i/(BARS_N-1);
+      el.style.background = f<0.62?'#3fae2a' : f<0.82?'#f4c430' : '#e23b2e';
+      arr.push(el); box.appendChild(el);
+    }
+  }
+  buildBars(document.getElementById('barsL'), barL);
+  buildBars(document.getElementById('barsR'), barR);
+
+  function updateMeters(t, shown){
+    if(arcFill){
+      arcFill.style.strokeDashoffset=(1000*(1-t)).toFixed(1);
+      const a=ARC.a0+t*(ARC.a1-ARC.a0); const [dx,dy]=arcPolar(a,ARC.r);
+      arcDot.setAttribute('cx',dx.toFixed(1)); arcDot.setAttribute('cy',dy.toFixed(1));
+      arcNum.textContent=shown.toFixed(1);
+    }
+    if(ringFill){ ringFill.style.strokeDashoffset=(1000*(1-t)).toFixed(1); ringNum.textContent=shown.toFixed(1); }
+    if(linFill){ linFill.style.width=(t*100).toFixed(1)+'%'; linNum.textContent=shown.toFixed(1); }
+    const ln=Math.round(t*BARS_N);
+    for(let i=0;i<BARS_N;i++){ const on=i<ln; barL[i]&&barL[i].classList.toggle('on',on); barR[i]&&barR[i].classList.toggle('on',on); }
+  }
+
   /* ============ ESTADO ============ */
   const needle=document.getElementById('needle');
   const elNow=document.getElementById('dbNow');
@@ -653,17 +838,26 @@
     history.push(clamp(db,DB_MIN,DB_MAX)); history.shift();
   }
 
+  function scopeColors(){
+    const cs=getComputedStyle(document.documentElement);
+    return {
+      trace:(cs.getPropertyValue('--scope-trace')||'#5af08c').trim(),
+      grid:(cs.getPropertyValue('--scope-grid')||'rgba(80,200,120,.14)').trim(),
+      axis:(cs.getPropertyValue('--scope-axis')||'rgba(120,220,150,.4)').trim(),
+      glow:(cs.getPropertyValue('--scope-glow')||'rgba(90,240,140,.8)').trim()
+    };
+  }
   function drawScope(){
     if(!scopeW) return;
-    const W=scopeW, H=scopeH, pad=4;
+    const W=scopeW, H=scopeH, pad=4, c=scopeColors();
     sctx.clearRect(0,0,W,H);
     // rejilla horizontal en niveles de referencia
     sctx.lineWidth=1; sctx.font='8px Courier New';
     [40,60,80,100].forEach(lv=>{
       const y=H-pad-((lv-DB_MIN)/(DB_MAX-DB_MIN))*(H-2*pad);
-      sctx.strokeStyle='rgba(80,200,120,.14)'; sctx.beginPath();
+      sctx.strokeStyle=c.grid; sctx.beginPath();
       sctx.moveTo(0,y); sctx.lineTo(W,y); sctx.stroke();
-      sctx.fillStyle='rgba(120,220,150,.4)'; sctx.fillText(lv, W-20, y-2);
+      sctx.fillStyle=c.axis; sctx.fillText(lv, W-20, y-2);
     });
     // trazo de fósforo
     sctx.beginPath();
@@ -674,8 +868,8 @@
       const y=H-pad-((v-DB_MIN)/(DB_MAX-DB_MIN))*(H-2*pad);
       if(!started){ sctx.moveTo(x,y); started=true; } else sctx.lineTo(x,y);
     }
-    sctx.strokeStyle='#5af08c'; sctx.lineWidth=1.6;
-    sctx.shadowColor='rgba(90,240,140,.8)'; sctx.shadowBlur=6;
+    sctx.strokeStyle=c.trace; sctx.lineWidth=1.6;
+    sctx.shadowColor=c.glow; sctx.shadowBlur=6;
     sctx.stroke(); sctx.shadowBlur=0;
   }
   let peak=-Infinity, min=Infinity, sum=0, count=0, peakHold=DB_MIN, peakHoldT=0;
@@ -829,13 +1023,17 @@
     if(shown>=peakHold || now-peakHoldT>900){ peakHold=shown; peakHoldT=now; }
 
     // escalera de LEDs
-    const lit = Math.round(((clamp(shown,DB_MIN,DB_MAX)-DB_MIN)/(DB_MAX-DB_MIN))*LED_N);
+    const frac=(clamp(shown,DB_MIN,DB_MAX)-DB_MIN)/(DB_MAX-DB_MIN);
+    const lit = Math.round(frac*LED_N);
     const holdIdx = Math.round(((clamp(peakHold,DB_MIN,DB_MAX)-DB_MIN)/(DB_MAX-DB_MIN))*LED_N)-1;
     for(let i=0;i<LED_N;i++){
       const on = i<lit || i===holdIdx;
       leds[i].classList.toggle('on', on);
       leds[i].style.background = on ? leds[i].dataset.col : '#241a10';
     }
+
+    // medidores alternativos (arco/barras/anillo/lineal según estética)
+    updateMeters(frac, shown);
 
     // dosis de exposición
     accumulateDose(shown);
@@ -983,6 +1181,22 @@
     }
     if(e.key==='Escape') overlay.classList.remove('show');
   });
+
+  // ===== hook de previsualización (para capturas; simula una lectura) =====
+  window.__preview=function(db){
+    const shown=clamp(db,0,140);
+    const frac=(clamp(shown,DB_MIN,DB_MAX)-DB_MIN)/(DB_MAX-DB_MIN);
+    needleDb=clamp(shown,DB_MIN,DB_MAX); setNeedle(needleDb);
+    elNow.textContent=shown.toFixed(1); elDesc.textContent=describe(shown);
+    elPeak.textContent='78'; elAvg.textContent='59'; elMin.textContent='41';
+    for(let i=0;i<LED_N;i++){ const on=i<Math.round(frac*LED_N);
+      leds[i].classList.toggle('on',on); leds[i].style.background=on?leds[i].dataset.col:'#241a10'; }
+    updateMeters(frac, shown);
+    dose=0.34/1; elDoseFill.style.width='34%'; elDoseFill.style.background='var(--yellow)';
+    elDosePct.textContent='34%'; elDoseMsg.textContent='Tiempo >85 dB: 00:00';
+    for(let i=0;i<HIST_N;i++){ history[i]=58+Math.sin(i/7)*7+Math.sin(i/2)*3; } drawScope();
+    btnPower.textContent='Apagar'; btnPower.classList.add('live'); powerled.classList.add('on');
+  };
 })();
 </script>
 <script>
