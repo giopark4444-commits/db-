@@ -2,3 +2,18 @@ node_modules/
 package.json
 package-lock.json
 preview-*.png
+
+# Secretos / entorno (repo público) — nunca subir
+.env
+.env.*
+!.env.example
+
+# Builds
+build/
+dist/
+out/
+__pycache__/
+*.py[cod]
+
+# Sistema
+.DS_Store
